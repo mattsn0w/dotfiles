@@ -1,0 +1,12 @@
+[user]
+	email = matt@mattsn0w.com
+	name = Matt Snow
+	signingkey = gh:Mattsn0w
+[credential]
+	helper = "!f() { echo username=Mattsn0w; echo \"password=$GITHUB_TOKEN\"; };f"
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[gpg "ssh"]
+	allowedSignersFile = .github/AUTHORIZED_SIGNATURES
