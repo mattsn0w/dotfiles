@@ -1,0 +1,36 @@
+---
+linux:
+  distro:
+    ubuntu:
+      os_pkgs:
+        - btop
+        - chromium-browser
+        - i3
+        - kitty
+        - lolcat
+        - neovim
+        - picom
+        - polybar
+        - rofi
+        - ripgrep
+        - stow
+        - xrdp
+        - xxd
+      external_pkgs:
+        urls:
+          - https://get.helm.sh/helm-v3.17.2-linux-amd64.tar.gz
+          - https://github.com/Julien-cpsn/ATAC/releases/download/v0.19.0/atac-v0.19.0-x86_64-unknown-linux-gnu.tar.gz
+          - https://github.com/derailed/k9s/releases/download/v0.40.10/k9s_Linux_amd64.tar.gz
+          - https://github.com/junegunn/fzf/releases/download/v0.61.1/fzf-0.61.1-linux_amd64.tar.gz
+          - https://github.com/kubernetes/kompose/releases/download/v1.35.0/kompose-linux-amd64.tar.gz
+          - https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_amd64.tar.gz
+          - https://github.com/oras-project/oras/releases/download/v1.2.2/oras_1.2.2_linux_amd64.tar.gz
+          - https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-gnu.tar.gz
+          - https://github.com/FiloSottile/age/releases/download/v1.2.1/age-v1.2.1-linux-amd64.tar.gz
+          - https://github.com/getsops/sops/releases/download/v3.10.2/sops-v3.10.2.linux.amd64
+
+        destination_dir: bin/downloads
+
+    cmd_cfgs:
+      sudo:
+        - sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /bin/kitty 100
