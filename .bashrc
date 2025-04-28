@@ -201,8 +201,11 @@ function kimages() {
 }
 
 
-
-
+##
+## Sops and Age
+##
+export SOPS_AGE_RECIPIENTS=$( cat ~/.sops/age/age.pub )
+export SOPS_AGE_KEY_FILE=~/.sops/age/keys.txt
 
 ##
 ## SSH command helpers
