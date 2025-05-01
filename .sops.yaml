@@ -1,0 +1,15 @@
+# creation rules are evaluated sequentially, the first match wins
+creation_rules:
+  - path_regex: ^.*docker-compose\.yaml$
+#    age: 'age1zz25hflrd580vmge9kkwaqa69xehwvacd93gk25x9myjyavpr3nqm424hw'
+    age: >-
+      age1zz25hflrd580vmge9kkwaqa69xehwvacd93gk25x9myjyavpr3nqm424hw,
+      age1hhc8jeuhtgrl60cx9885d6amty52fpcta0yya4ce4r4yfgwpmudqrj9x5q
+
+stores:
+  json:
+    indent: 2
+  json_binary:
+    indent: 2
+  yaml:
+    indent: 2
