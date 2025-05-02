@@ -28,6 +28,7 @@ linux:
           - https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-gnu.tar.gz
           - https://github.com/FiloSottile/age/releases/download/v1.2.1/age-v1.2.1-linux-amd64.tar.gz
           - https://github.com/getsops/sops/releases/download/v3.10.2/sops-v3.10.2.linux.amd64
+          - https://github.com/ducaale/xh/releases/download/v0.24.0/xh-v0.24.0-x86_64-unknown-linux-musl.tar.gz
 
         destination_dir: bin/downloads
 
