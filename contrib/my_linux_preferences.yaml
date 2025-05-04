@@ -29,6 +29,7 @@ linux:
           - https://github.com/FiloSottile/age/releases/download/v1.2.1/age-v1.2.1-linux-amd64.tar.gz
           - https://github.com/getsops/sops/releases/download/v3.10.2/sops-v3.10.2.linux.amd64
           - https://github.com/ducaale/xh/releases/download/v0.24.0/xh-v0.24.0-x86_64-unknown-linux-musl.tar.gz
+          - https://github.com/aristocratos/btop/releases/download/v1.4.2/btop-x86_64-linux-musl.tbz
 
         destination_dir: bin/downloads
 
