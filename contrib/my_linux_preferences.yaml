@@ -1,4 +1,9 @@
 ---
+editors:
+  nvim:
+    plugins:
+      - https://github.com/nvim-lua/kickstart.nvim/
+      
 linux:
   distro:
     ubuntu:
