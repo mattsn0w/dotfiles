@@ -5,10 +5,12 @@ linux:
       os_pkgs:
         - btop
         - chromium-browser
+        - fd-find
         - i3
         - kitty
         - lolcat
         - neovim
+        - nvim
         - picom
         - polybar
         - rofi
