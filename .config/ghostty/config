@@ -1,0 +1,20 @@
+# https://ghostty.org/docs/config
+# ctrl+shift+, (Linux) or cmd+shift+, (macOS) to reload.
+# macOS path: $HOME/Library/Application\ Support/com.mitchellh.ghostty/config
+# Linux path: $XDG_CONFIG_HOME/ghostty/config or $HOME/.config/ghostty/config
+
+window-inherit-font-size = "false"
+# https://www.nerdfonts.com/font-downloads
+font-family = "Hack Nerd Font"
+font-size = "16"
+#font-family = "GoMono Nerd Font Mono"
+
+theme = "catppuccin-mocha"
+#theme = "catppuccin-macciato"
+
+# Put some lipstick on that thang.
+#background-opacity = 0.7
+background-opacity = 0.6
+background-blur = "true"
+
+
