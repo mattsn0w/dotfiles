@@ -1,6 +1,7 @@
 ## 
-## Quick activation of this file:
-##   echo 'if [ -f ~/.bashrc.extra ]; then source ~/.bashrc.extra ; fi' >> ~/.bashrc && echo '' >> ~/.bashrc
+## Quickly get and  activation of this file:
+# wget https://raw.githubusercontent.com/mattsn0w/dotfiles/refs/heads/main/.bashrc.extra -O ~/.bashrc.extra && echo 'if [ -f ~/.bashrc.extra ]; then source ~/.bashrc.extra ; fi' >> ~/.bashrc && echo '' >> ~/.bashrc
+
 
 ## History file setup
 ## See https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
