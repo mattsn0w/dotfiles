@@ -1,4 +1,6 @@
-
+## 
+## Quick activation of this file:
+##   echo 'if [ -f ~/.bashrc.extra ]; then source ~/.bashrc.extra ; fi' >> ~/.bashrc && echo '' >> ~/.bashrc
 ##
 ## History file setup
 ##
@@ -31,7 +33,7 @@ function kubernetes() {
   complete -F __start_kubectl k
   export TERM=xterm-256color
   
-  which kubectl > /devl/null 2>&1
+  which kubectl > /dev/null 2>&1
   if [ $? -eq 0 ]; then
     source <(k completion bash)
   else
