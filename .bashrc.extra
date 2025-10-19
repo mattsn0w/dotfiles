@@ -1,0 +1,54 @@
+
+##
+## History file setup
+##
+## See https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+##
+
+# Set history file to include timestamp
+export HISTTIMEFORMAT="%h/%d - %H:%M:%S "
+# Define number of records to keep in history file
+export HISTFILESIZE=100000
+# HISTFILE to use for appending history properly.
+export HISTFILE=~/.peekaboo
+# Append commands to history file instead of clobbering.
+shopt -s histappend
+# dont put duplicate lines or lines starting with space in the history.
+export HISTCONTROL=ignoreboth
+export HISTFILE=~/.peekaboo
+
+
+## https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+# Check window size when spawning.
+shopt -s checkwinsize
+## Terminal Emulator Settings
+export TERM=xterm-color
+
+
+function kubernetes() {
+# Settings for Kubernetes, kubectl, k9s
+  alias k=kubectl
+  complete -F __start_kubectl k
+  export TERM=xterm-256color
+  
+  which kubectl > /devl/null 2>&1
+  if [ $? -eq 0 ]; then
+    source <(k completion bash)
+  else
+    echo "kubectl not found in \$PATH"
+  fi
+  
+  K8S_CFGS=(
+    "/etc/rancher/k3s/k3s.yaml"
+    "/etc/rancher/rke2/rke2.yaml"
+  )
+  for file in ${K8S_CFGS[@]}; do
+    if [ -f "${file}" ] ; then
+      export KUBECONFIG=${file}
+    fi
+  done
+  if [ -z "$KUBECONFIG" ]; then
+    echo "No \$KUBECONFIG set. "
+  fi
+# END kubernetes()
+}
