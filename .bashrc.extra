@@ -1,30 +1,36 @@
 ## 
 ## Quick activation of this file:
 ##   echo 'if [ -f ~/.bashrc.extra ]; then source ~/.bashrc.extra ; fi' >> ~/.bashrc && echo '' >> ~/.bashrc
-##
-## History file setup
-##
-## See https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
-##
 
-# Set history file to include timestamp
-export HISTTIMEFORMAT="%h/%d - %H:%M:%S "
-# Define number of records to keep in history file
-export HISTFILESIZE=100000
-# HISTFILE to use for appending history properly.
-export HISTFILE=~/.peekaboo
-# Append commands to history file instead of clobbering.
-shopt -s histappend
-# dont put duplicate lines or lines starting with space in the history.
+## History file setup
+## See https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
 export HISTCONTROL=ignoreboth
 export HISTFILE=~/.peekaboo
+export HISTTIMEFORMAT="%h/%d - %H:%M:%S "
+export HISTFILESIZE=100000
+
+shopt -s histappend
 
 
 ## https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
-# Check window size when spawning.
 shopt -s checkwinsize
-## Terminal Emulator Settings
 export TERM=xterm-color
+
+### Must have fzf (shell fuzzy finder) - this is a game changer and must have! https://github.com/junegunn/fzf
+### 
+if [ $(which fzf) ]; then
+  export FZF_DEFAULT_OPTS="--height=-50%"
+  #
+  # Theme for fzf - https://vitormv.github.io/fzf-themes/
+  # COLORS
+  export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --color=fg:#d0d0d0,fg+:#d0d0d0,bg:#121212,bg+:#262626 --color=hl:#5f87af,hl+:#5fd7ff,info:#afaf87,marker:#87ff00 --color=prompt:#d7005f,spinner:#af5fff,pointer:#af5fff,header:#87afaf --color=border:#262626,label:#aeaeae,query:#d9d9d9'
+  # DECORATE BORDERS
+  export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --border=rounded --border-label="fzf" --preview-window=border-rounded'
+  # DECORATE PROMPT AND CURSOR
+  export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --prompt="> "  --marker=">" --pointer="◆" --separator="─" --scrollbar="│"'
+  # Execute
+  eval "$(fzf --bash )"
+fi
 
 
 function kubernetes() {
@@ -53,4 +59,66 @@ function kubernetes() {
     echo "No \$KUBECONFIG set. "
   fi
 # END kubernetes()
+}
+
+## 
+## Get Latest useful softwares
+## 
+
+function get-k9s() {
+  ORG=derailed
+  REPO=k9s
+  mkdir app-dl-${REPO} && cd app-dl-${REPO}
+
+  SHA_FILE=checksums.sha256
+  DL_FILE=k9s_Linux_amd64.tar.gz
+  SHA_FILE_DL_ONLY=checksums.sha256.${DL_FILE}
+  GITHUB_URL=https://api.github.com/repos/${ORG}/${REPO}/releases/latest
+  wget ${GITHUB_URL} -O ${REPO}.json
+
+  VERSION=$( cat ${REPO}.json | jq -r '.tag_name' )
+  SHA_URL=$( cat ${REPO}.json | jq -r '.assets.[].browser_download_url' | grep ${SHA_FILE} )
+  DL_URL=$( cat ${REPO}.json | jq -r '.assets.[].browser_download_url' | egrep -i "${DL_FILE}\$" )
+
+  wget ${DL_URL}
+  wget ${SHA_URL}
+  grep "${DL_FILE}\$" ${SHA_FILE} > ${SHA_FILE_DL_ONLY}
+  sha256sum -c ${SHA_FILE_DL_ONLY}
+  if [ $? -eq 0 ]; then
+    echo "Sha256 matches OK. Installing ${REPO} ${VERSION} to /usr/local/bin/k9s..."
+    tar -zxf ${DL_FILE}
+    chmod +x k9s
+    mv k9s /usr/local/bin/
+    cd .. && rm -rf app-dl-${REPO}
+  fi
+}
+
+function get-fzf() {
+  ORG=junegunn
+  REPO=fzf
+  mkdir app-dl-${REPO} && cd app-dl-${REPO}
+
+  GITHUB_URL=https://api.github.com/repos/${ORG}/${REPO}/releases/latest
+  wget ${GITHUB_URL} -O ${REPO}.json
+
+  VERSION=$( cat ${REPO}.json | jq -r '.name' )
+
+  SHA_FILE=${REPO}_${VERSION}_checksums.txt
+  DL_FILE=${REPO}-${VERSION}-linux_amd64.tar.gz
+  SHA_FILE_DL_ONLY=${SHA_FILE}.${DL_FILE}
+
+  SHA_URL=$( cat ${REPO}.json | jq -r '.assets.[].browser_download_url' | grep ${SHA_FILE} )
+  DL_URL=$( cat ${REPO}.json | jq -r '.assets.[].browser_download_url' | egrep -i "${DL_FILE}\$" )
+
+  wget ${DL_URL}
+  wget ${SHA_URL}
+  grep "${DL_FILE}\$" ${SHA_FILE} > ${SHA_FILE_DL_ONLY}
+  sha256sum -c ${SHA_FILE_DL_ONLY}
+  if [ $? -eq 0 ]; then
+    echo "Sha256 matches OK. Installing ${REPO} ${VERSION} to /usr/local/bin/${REPO}..."
+    tar -zxf ${DL_FILE}
+    chmod +x ${REPO} && chown root:root ${REPO}
+    mv ${REPO} /usr/local/bin/
+    cd .. && rm -rf app-dl-${REPO}
+  fi
 }
