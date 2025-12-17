@@ -8,21 +8,33 @@ linux:
   distro:
     ubuntu:
       os_pkgs:
+        - bat/noble
         - btop
         - chromium-browser
+        - dict dictd dict-gcide dict-jargon dict-vera dict-wn dict-foldoc dict-devil
         - fd-find
         - i3
+        - keepassxc
         - kitty
+        - krdc
         - lolcat
+        - maim
         - neovim
         - nvim
         - picom
         - polybar
-        - rofi
+        - remmina remmina-plugin-vnc
         - ripgrep
+        - rofi
+        - screenkey
         - stow
+        - systemd-container
+        - unzip
+        - virt-top virt-viewer qemu-utils libvirt-daemon libqcow-utils bluetooth
+        - xclip
         - xrdp
         - xxd
+        - yamllint
       external_pkgs:
         urls:
           - https://get.helm.sh/helm-v3.17.2-linux-amd64.tar.gz
@@ -37,6 +49,9 @@ linux:
           - https://github.com/getsops/sops/releases/download/v3.10.2/sops-v3.10.2.linux.amd64
           - https://github.com/ducaale/xh/releases/download/v0.24.0/xh-v0.24.0-x86_64-unknown-linux-musl.tar.gz
           - https://github.com/aristocratos/btop/releases/download/v1.4.2/btop-x86_64-linux-musl.tbz
+          - https://github.com/vicinaehq/vicinae/releases/download/v0.16.14/Vicinae-04608039d-x86_64.AppImage
+          - https://github.com/sxyazi/yazi/releases/download/v25.5.31/yazi-x86_64-unknown-linux-musl.zip
+
 
         destination_dir: bin/downloads
 
