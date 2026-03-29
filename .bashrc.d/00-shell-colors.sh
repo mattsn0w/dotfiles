@@ -1,13 +1,5 @@
-# If not running interactively, don't do anything (leave this at the top of this file)
-[[ $- != *i* ]] && return
+#!/bin/bash
 
-# All the default Omarchy aliases and functions
-# (don't mess with these directly, just overwrite them here!)
-source ~/.local/share/omarchy/default/bash/rc
-
-# Add your own exports, aliases, and functions here.
-
-#setxkbmap -option "ctrl:nocaps"
 
 
 #
@@ -33,11 +25,4 @@ export bsblink='\e[0;5m'
 #
 ## end bash colors and styles.
 #
-
-if [ -d ~/.bashrc.d ]; then
-  cd ~/.bashrc.d
-  for SHELL_FU in in *.sh; do 
-    source ${SHELL_FU}
-  done
-fi
-
+#
