@@ -1,0 +1,105 @@
+#!/bin/bash
+
+
+function debugecho() {
+  if [ ! -z "$DEBUG" ]; then
+    echo "INFO ${1}"
+  fi
+}
+
+MEME=$(id -un)
+export MEME
+debugecho "I am ${MEME}"
+
+
+## BEGIN SSH Key Helper
+HOME_DIR_PREFIXES=("/home" "/Users")
+USER_SSH_DIR="${HOME}/.ssh"
+SSH_OS_AGENT="${USER_SSH_DIR}/agent-os.socket"
+SSH_HB_AGENT="${USER_SSH_DIR}/agent-homebrew.socket"
+
+OSSSH="/usr/bin"
+HBSSH="/opt/homebrew/bin"
+
+KEY_FILES=()
+AVAILABLE_KEYS=()
+
+# Only set SSH socket if an interactive shell.
+if [[ ! -S "$SSH_AUTH_SOCK"  ]]; then
+  debugecho "setting SSH_AUTH_SOCK to ${SSH_HB_AGENT}"
+  SSH_AUTH_SOCK=${SSH_HB_AGENT}
+  export SSH_AUTH_SOCK
+fi
+
+function prune-ssh-agent() {
+      pkill -U ${MEME} -9 ssh-agent
+      rm -f ${SSH_OS_AGENT} ${SSH_HB_AGENT}
+}
+
+function start-ssh-sock() {
+  echo "starting ssh-agent for macOS ( ${SSH_OS_AGENT} ) and homebrew ( ${SSH_HB_AGENT} ) .."
+  ${HBSSH}/ssh-agent -a ${SSH_HB_AGENT}
+  ${OSSSH}/ssh-agent -a ${SSH_OS_AGENT}
+  #source <(${HBSSH}/ssh-agent -a ${SSH_HB_AGENT} )
+  #source <(${OSSSH}/ssh-agent -a ${SSH_OS_AGENT} )
+}
+
+function find-local-ssh-dirs-keys() {
+  for HOME_PREFIX in ${HOME_DIR_PREFIXES[@]}; do
+    SSH_DIR=${HOME_PREFIX}/${USER}/.ssh
+    if [[ -r "${HOME_PREFIX}/${USER}" && -d "${SSH_DIR}" ]]; then
+      # The grep glob(*) will include directories. set -d skip so grep ignores sub-dirs in .ssh
+      for KEY in $( grep -d skip 'BEGIN OPENSSH PRIVATE KEY' ${SSH_DIR}/* 2>/dev/null | cut -d: -f1 | sort -u ); do
+        debugecho "${FUNCNAME}() : Adding $KEY to available keys."
+        AVAILABLE_KEYS+=("${KEY}")
+      done
+    fi
+  done
+}
+
+function addsshkeyifnone() {
+  retcode=$1
+  if [ "$retcode" -ne 0 ]; then
+    echo "Adding keys to macOS and homebrew agents..."
+    for KEY_FILE in ${AVAILABLE_KEYS[@]}; do
+      SSH_AUTH_SOCK=${SSH_HB_AGENT} ${HBSSH}/ssh-add -t 259200 ${KEY_FILE}
+      SSH_AUTH_SOCK=${SSH_OS_AGENT} ${OSSSH}/ssh-add -t 259200 ${KEY_FILE}
+    done
+  elif [ "$retcode" -eq 0 ]; then
+    echo "already have key in agent."
+  fi
+}
+
+
+function sshagenthelper() {
+  # Make sure we don't ascend into a fork loop.
+  if [ -z $RUNNING ] ; then
+    RUNNING=1
+    export RUNNING
+    # If an ssh-agent process is already run by current user, use it.
+    #  TODO:: match the pid to the socket.
+    if pgrep -la -u ${MEME} ssh-agent 2>&1 >/dev/null && [[ -S "${SSH_HB_AGENT}" ]] ; then
+      echo "ssh-agent running. Verifying it has keys..."
+      ${HBSSH}/ssh-add -l 2>&1 > /dev/null
+      addsshkeyifnone $?
+    else
+      echo "no running ssh-agent detected. Pruning any dangling agents."
+      prune-ssh-agent
+      echo "searching for ssh directories and keys..."
+      find-local-ssh-dirs-keys
+      if [ -d ${LOCAL_SSH_DIR} ]; then
+        start-ssh-sock
+        ${HBSSH}/ssh-add -l 2>&1 > /dev/null
+        addsshkeyifnone $?
+      fi
+    fi
+  fi
+  unset RUNNING
+}
+
+alias ssh='sshagenthelper && ${HBSSH}/ssh'
+alias scp='sshagenthelper && ${HBSSH}/scp'
+alias ssh-add='sshagenthelper && ${HBSSH}/ssh-add'
+alias ssh-agent='sshagenthelper'
+
+## END SSH Helper section.

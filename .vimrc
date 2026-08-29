@@ -16,7 +16,7 @@ set foldcolumn=2
 set foldmethod=marker
 
 " indicate when a line is wrapped by prefixing wrapped line with '> '
-set showbreak=>\
+" set showbreak=>\
 
 " always show tab line
 set showtabline=2

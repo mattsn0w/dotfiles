@@ -157,8 +157,7 @@ export WHOAMI=$(whoami)
 function addsshkeyifnone() {
   retcode=$1
   if [ "$retcode" -ne 0 ]; then
-    echo "Adding id_ed25519 key..."
-    ssh-add ~/.ssh/id_ed25519
+    /usr/bin/ssh-add ~/.ssh/id_ed25519
   elif [ "$retcode" -eq 0 ]; then
     echo "already have key in agent."
   fi
@@ -166,16 +165,17 @@ function addsshkeyifnone() {
 
 function sshagenthelper() {
   if pgrep -u ${WHOAMI} ssh-agent 2>&1 >/dev/null ; then 
-     echo "ssh-agent already running with pid $(pgrep -u ${WHOAMI} ssh-agent ). sourcing ~/.ssh/agent.env." \
-      && source ~/.ssh/agent.env 
-      ssh-add -l 2>&1 > /dev/null
-      addsshkeyifnone $?
+    SSH_AUTH_SOCK="${HOME}/.ssh/agent-os.socket"
+    export SSH_AUTH_SOCK
+    /usr/bin/ssh-add -l 2>&1 > /dev/null
+    addsshkeyifnone $?
   else 
-     echo "ssh-agent not running. Starting a new one"
-     ssh-agent > ~/.ssh/agent.env \
-       && source ~/.ssh/agent.env
-      ssh-add -l 2>&1 > /dev/null
-      addsshkeyifnone $?
+    echo "ssh-agent not running. Starting a new one"
+    /usr/bin/ssh-agent -a ~/.ssh/agent-os.socket \
+      && SSH_AUTH_SOCK="${HOME}/.ssh/agent-os.socket"
+    export SSH_AUTH_SOCK
+    /usr/bin/ssh-add -l 2>&1 > /dev/null
+    addsshkeyifnone $?
   fi
 }
 

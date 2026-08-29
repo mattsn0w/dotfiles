@@ -25,3 +25,9 @@ fi
 alias vim=nvim
 
 export EDITOR=nvim
+
+if [[ -f ~/.zshrc && -f ~/.zshrc.extra ]]; then
+  source ~/.zshrc.extra
+fi
+
+
