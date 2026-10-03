@@ -22,7 +22,7 @@ export PATH=${OPENCODE_BIN}:${CARGO_BIN}:${UV_PATH}:${PATH}
 ### fzf - shell fuzzy finder https://github.com/junegunn/fzf
 ###
 
-if [ $(command -v fzf > /dev/null ]; then
+if $(command -v fzf > /dev/null) ; then
   export FZF_DEFAULT_OPTS="--height=-50%"
   #
   # Theme for fzf - https://vitormv.github.io/fzf-themes/

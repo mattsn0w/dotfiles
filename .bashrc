@@ -3,7 +3,9 @@
 
 # All the default Omarchy aliases and functions
 # (don't mess with these directly, just overwrite them here!)
-source ~/.local/share/omarchy/default/bash/rc
+if [ -f ~/.local/share/omarchy/default/bash/rc ]; then
+    source ~/.local/share/omarchy/default/bash/rc
+fi
 
 # Add your own exports, aliases, and functions here.
 
@@ -35,8 +37,7 @@ export bsblink='\e[0;5m'
 #
 
 if [ -d ~/.bashrc.d ]; then
-  cd ~/.bashrc.d
-  for SHELL_FU in in *.sh; do 
+  for SHELL_FU in ~/.bashrc.d/*.sh; do 
     source ${SHELL_FU}
   done
 fi

@@ -1,0 +1,5 @@
+.ssh/*
+!.ssh/authorized_keys
+!.ssh/config
+!.ssh/*.pub
+
